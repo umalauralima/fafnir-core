@@ -8,6 +8,8 @@
 *.py[cod]
 *$py.class
 
+migrations/versions/*.pyc
+
 # Distribuição / build
 
 build/
