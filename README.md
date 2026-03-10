@@ -19,7 +19,7 @@ O sistema permite:
 - Alertas (ALERTS) podem ser gerados automaticamente quando quantidade mínima é atingida ou outras regras do sistema.
 
 ### Modelagem do banco
-![Diagrama](assets/white-2026-03-10-140204.png)(https://mermaid.ai/d/699debac-f555-446e-bca7-cd178f3358cf)
+![Diagrama](assets/white-2026-03-10-140204.png)(https://mermaid.ai/d/41d57b72-4aa4-4d37-80f4-f1d6d6ca1fb3)
 
 ### Arquitetura dos microserviços
 ![Diagrama](assets/microservices.png)(https://mermaid.ai/d/7d4e3b1f-0352-4157-9ecd-f25267471612)
