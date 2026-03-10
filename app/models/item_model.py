@@ -17,15 +17,6 @@ class Item(BaseModel):
     quantity = db.Column(db.Integer, default=0)
     minimum_stock = db.Column(db.Integer, default=0)
 
-    expiration_date = db.Column(db.Date)
-
     created_by = db.Column(db.Integer, db.ForeignKey("users.id"))
-
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(
-        db.DateTime,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow
-    )
 
     movements = db.relationship("InventoryMovement", backref="item", lazy=True)
