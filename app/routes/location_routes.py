@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from pydantic import ValidationError
+from app.decorators import requires_permission
 from app.services.location_service import LocationService
 from ..dto.location_dto import *
 
@@ -8,7 +9,7 @@ location_bp = Blueprint("locations", __name__)
 service = LocationService()
 
 @location_bp.route("/locations", methods=["GET"])
-
+@requires_permission("list_loc")
 def list():
 
     page = request.args.get("page", default=1, type=int)
@@ -29,18 +30,17 @@ def list():
     return jsonify(result), 200
 
 @location_bp.route("/locations", methods=["POST"])
+@requires_permission("create_loc")
 def create():
 
-    try:
-        dto = LocationCreateDTO(**request.json)
-    except ValidationError as e:
-        return jsonify(e.errors()), 400
+    dto = LocationCreateDTO(**request.json)
 
     location = service.create(dto)
 
     return LocationResponseDTO.model_validate(location).model_dump(), 201
 
 @location_bp.route("/locations/<int:location_id>", methods=["GET"])
+@requires_permission("get_loc")
 def get_location(location_id):
     try:
         
@@ -58,6 +58,7 @@ def get_location(location_id):
         return jsonify({"error": "Erro interno"}), 500
     
 @location_bp.route("/locations/<int:location_id>", methods=["PUT"])
+@requires_permission("update_loc")
 def update(location_id):
     try:
         # Cria DTO de entrada a partir do JSON
@@ -78,6 +79,7 @@ def update(location_id):
         return jsonify({"error": "Erro interno"}), 500
     
 @location_bp.route("/locations/<int:location_id>", methods=["DELETE"])
+@requires_permission("delete_loc")
 def delete(location_id):
     try:
         

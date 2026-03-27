@@ -1,4 +1,5 @@
 from flask import Flask
+from app.errors.error_handler import ErrorHandler
 from app.routes import register_blueprints
 from .config import Config
 from .extensions import db, migrate
@@ -11,8 +12,10 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
+    ErrorHandler.init_app(app)
+    
     register_blueprints(app)
-
+    
     return app
 
 ## flask db init - inicializar os migrates
