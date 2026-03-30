@@ -1,14 +1,13 @@
-from .user_routes import user_bp
-from .category_routes import category_bp
-from .location_routes import location_bp
+import pkgutil
+import importlib
 
 def register_blueprints(app):
+    package = __name__
 
-    blueprints = [
-        user_bp,
-        category_bp,
-        location_bp
-    ]
+    for _, module_name, _ in pkgutil.iter_modules(__path__):
+        module = importlib.import_module(f"{package}.{module_name}")
 
-    for bp in blueprints:
-        app.register_blueprint(bp)
+        # Procura por variáveis que terminam com _bp
+        for attr in dir(module):
+            if attr.endswith("_bp"):
+                app.register_blueprint(getattr(module, attr))
