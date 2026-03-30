@@ -1,3 +1,4 @@
+import traceback
 from flask import jsonify
 from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
@@ -20,7 +21,7 @@ class ErrorHandler:
                 "error": {
                     "code": e.code,
                     "message": e.message
-                }
+                }   
             }), e.status_code
 
         @app.errorhandler(ValidationError)
@@ -69,15 +70,17 @@ class ErrorHandler:
 
         @app.errorhandler(HTTPException)
         def handle_http_exception(e):
+            print(traceback.format_exc())
             return jsonify({
                 "error": {
                     "code": f"HTTP-{e.code}",
-                    "message": e.description
+                    "message": "Erro interno do servidor"
                 }
             }), e.code
 
         @app.errorhandler(Exception)
         def handle_generic_error(e):
+            print(traceback.format_exc())
             print(f"[ERROR] {str(e)}")
 
             return jsonify({
@@ -116,10 +119,10 @@ class ErrorHandler:
         )
 
     @staticmethod
-    def unauthorized():
+    def unauthorized(message="Não autorizado"):
         raise ApiError(
             code="AUTH-401",
-            message="Não autorizado",
+            message=message,
             status_code=401
         )
 
@@ -136,5 +139,13 @@ class ErrorHandler:
         raise ApiError(
             code="REQ-003",
             message=f"Header não informado: {header_name}",
+            status_code=400
+        )
+    
+    @staticmethod
+    def token_expired(message="Requisição inválida"):
+        raise ApiError(
+            code="REQ-004",
+            message=message,
             status_code=400
         )
