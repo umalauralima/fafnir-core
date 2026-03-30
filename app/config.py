@@ -14,3 +14,4 @@ class Config:
 
     CATEGORIES_PER_PAGE = 10
     LOCATIONS_PER_PAGE = 1
+    ITEMS_PER_PAGE = 20
