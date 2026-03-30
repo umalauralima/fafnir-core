@@ -31,11 +31,8 @@ def list_categories():
 @category_bp.route("/categories", methods=["POST"])
 def create_category():
 
-    try:
-        dto = CategoryCreateDTO(**request.json)
-    except ValidationError as e:
-        return jsonify(e.errors()), 400
-
+    dto = CategoryCreateDTO(**request.json)
+    
     category = service.create_category(dto)
 
     return CategoryResponseDTO.model_validate(category).model_dump(), 201
