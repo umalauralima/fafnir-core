@@ -15,9 +15,10 @@ def list():
 
     dto = ItemsListDTO(**request.args)
 
+    #TODO Diferenciar pela visao do usuario
     pagination = service.list_items_paginated(dto.page)
 
-    items = [ItemsListResponseDTO.model_validate(c).model_dump() for c in pagination["items"]]
+    items = [ItemsListResponsePrivateDTO.model_validate(c).model_dump() for c in pagination["items"]]
 
     result = {
         "items": items,
@@ -57,7 +58,8 @@ def get_item(id):
     
     item = service.get_item(id)
     
-    return ItemDetailDTO.model_validate(item).model_dump(), 201
+    #TODO Diferenciar pela visao do usuario
+    return ResumeItemPrivateDTO.model_validate(item).model_dump(), 201
 
 
 @items_bp.route("/item/<int:id>", methods=["PUT"])
@@ -71,6 +73,6 @@ def update_item(id):
     obj = service.update_item(id, dto)
 
     # Converte para DTO de saída
-    result = ItemDetailDTO.model_validate(obj).model_dump()
+    result = ResumeItemPrivateDTO.model_validate(obj).model_dump()
 
     return jsonify(result), 200
