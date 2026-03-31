@@ -35,6 +35,8 @@ class Request(BaseModel):
     )
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    approved_at = db.Column(db.DateTime)
+    approved_at = db.Column(db.DateTime, nullable=True)
+    rejected_at = db.Column(db.DateTime, nullable=True)
+    canceled_at = db.Column(db.DateTime, nullable=True)
 
     items = db.relationship("RequestItem", back_populates="request", lazy=True)

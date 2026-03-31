@@ -14,9 +14,14 @@ class Item(BaseModel):
     unit_id = db.Column(db.Integer, db.ForeignKey("units.id"))
     location_id = db.Column(db.Integer, db.ForeignKey("locations.id"))
 
-    quantity = db.Column(db.Integer, default=0)
+    stock_total = db.Column(db.Integer, nullable=False)
+    stock_reserved = db.Column(db.Integer, default=0)
     minimum_stock = db.Column(db.Integer, default=0)
 
     created_by = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     movements = db.relationship("InventoryMovement", backref="item", lazy=True)
+
+    @property
+    def stock_available(self):
+        return self.stock_total - self.stock_reserved
