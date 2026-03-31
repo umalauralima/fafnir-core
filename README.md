@@ -40,6 +40,31 @@ O sistema permite:
 - Movimentações e ações do usuário são registradas em logs (ACTIVITY_LOGS).
 - Alertas (ALERTS) podem ser gerados automaticamente quando quantidade mínima é atingida ou outras regras do sistema.
 
+3️⃣ Rodando o projeto
+#### 1. Pré-requisitos
+Antes de começar, verifique se o ambiente atende aos seguintes requisitos:
+- Docker instalado (versão mínima recomendada: 20.x)
+- Docker Compose instalado (versão mínima recomendada: 2.x)
+- Conexão com a internet (para baixar as imagens Docker)
+
+#### 2. Clonar o repositório da aplicação
+Caso o projeto esteja em um repositório Git:
+```
+git clone <URL_DO_REPOSITORIO>
+cd <NOME_DO_REPOSITORIO>
+```
+
+#### 3. Configurar variáveis de ambiente
+```
+cp .env.example .env
+```
+
+#### 4. Construir e iniciar os containers Docker
+```
+docker compose up --build
+docker compose up -d
+```
+
 ### Modelagem do banco
 ![Diagrama](assets/white-2026-03-10-140204.png)(https://mermaid.ai/d/41d57b72-4aa4-4d37-80f4-f1d6d6ca1fb3)
 
