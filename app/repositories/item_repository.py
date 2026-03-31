@@ -21,7 +21,6 @@ class ItemRepository:
     def get_item_by_id(self, id):
         return Item.query.get(id)
 
-    
     def delete_items(self, ids):
         try:
             db.session.query(Item).filter(Item.id.in_(ids)).delete(synchronize_session=False)
@@ -64,3 +63,11 @@ class ItemRepository:
         except Exception:
             db.session.rollback()
             raise
+
+    def get_by_ids_for_update(self, ids: list[int]):
+        return (
+            db.session.query(Item)
+            .filter(Item.id.in_(ids))
+            .with_for_update()
+            .all()
+        )
