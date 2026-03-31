@@ -24,7 +24,7 @@ class ItemService:
                 "category_id": item.category_id,
                 "unit_id": item.unit_id,
                 "location_id": item.location_id,
-                "quantity": item.quantity,
+                "stock_total": item.stock,
                 "minimum_stock": item.minimum_stock,
                 "created_by": user.id
             }
