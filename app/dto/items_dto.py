@@ -10,6 +10,8 @@ class ItemsListResponseDTO(BaseModel):
     id: int
     name: str = Field(..., min_length=1, max_length=150)
     description: Optional[str] = None
+    stock_total: int
+    stock_reserved: int
 
     class Config:
         from_attributes = True
@@ -21,7 +23,7 @@ class ItemDetailDTO(BaseModel):
     category_id: int
     unit_id: int
     location_id: int
-    quantity: int
+    stock_total: int
     minimum_stock: int
 
     class Config:
@@ -35,13 +37,13 @@ class ItemCreateDTO(BaseModel):
     unit_id: int
     location_id: int
 
-    quantity: int = Field(default=0, ge=0)
-    minimum_stock: int = Field(default=0, ge=0)
+    stock: int = Field(..., ge=0)
+    minimum_stock: int = Field(..., ge=0)
 
     @model_validator(mode="after")
     def validate_stock(self):
-        if self.minimum_stock > self.quantity:
-            raise ValueError("minimum_stock cannot be greater than quantity")
+        if self.minimum_stock > self.stock:
+            raise ValueError("minimum_stock cannot be greater than stock")
         return self
 
 class ItemUpdateDTO(BaseModel):
@@ -52,7 +54,7 @@ class ItemUpdateDTO(BaseModel):
     name: Optional[str] = Field(None, min_length=1, max_length=150)
     description: Optional[str] = None
 
-    quantity: Optional[int] = Field(None, ge=0)
+    stock: Optional[int] = Field(None, ge=0)
     minimum_stock: Optional[int] = Field(None, ge=0)
 
     category_id: Optional[int] = None
@@ -63,8 +65,8 @@ class ItemUpdateDTO(BaseModel):
     def validate_stock(self):
         if (
             self.minimum_stock is not None and
-            self.quantity is not None and
-            self.minimum_stock > self.quantity
+            self.stock is not None and
+            self.minimum_stock > self.stock
         ):
             raise ValueError("minimum_stock cannot be greater than quantity")
         return self
@@ -74,6 +76,13 @@ class ItemsCreateDTO(BaseModel):
 
 class ItemsDeleteDTO(BaseModel):
     ids: List[int] = Field(..., min_ids=1)
+
+    class Config:
+        from_attributes = True
+
+class SummaryRequestItemDTO(BaseModel):
+    id: int
+    name: str
 
     class Config:
         from_attributes = True

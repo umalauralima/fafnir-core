@@ -18,3 +18,9 @@ class UserResponseDTO(BaseModel):
 
     class Config:
         from_attributes = True
+
+class UserSummaryDTO(BaseModel):
+    uuid: int
+
+    class Config:
+        from_attributes = True
