@@ -32,13 +32,13 @@ class ErrorHandler:
             invalid = []
 
             for err in errors:
-                field = err["loc"][0]
+                field_path = format_loc(err["loc"])
 
                 if err["type"] == "missing":
-                    missing.append(field)
+                    missing.append(field_path)
                 else:
                     invalid.append({
-                        "field": field,
+                        "field": field_path,
                         "message": err["msg"]
                     })
 
@@ -58,6 +58,24 @@ class ErrorHandler:
                     "details": invalid
                 }
             }), 400
+
+
+        def format_loc(loc: tuple):
+            """
+            ('items', 0, 'stock') -> 'items[0].stock'
+            """
+            path = ""
+
+            for i, part in enumerate(loc):
+                if isinstance(part, int):
+                    path += f"[{part}]"
+                else:
+                    if i == 0:
+                        path += part
+                    else:
+                        path += f".{part}"
+
+            return path
 
         @app.errorhandler(IntegrityError)
         def handle_integrity_error(e):
