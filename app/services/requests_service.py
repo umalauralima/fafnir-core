@@ -1,5 +1,6 @@
 from collections import defaultdict
 from app.dto.requests_dto import RequestCreateDTO
+from app.errors.base import ApiError
 from app.models.request_item_model import RequestItem
 from app.repositories.item_repository import ItemRepository
 from app.repositories.request_item_repository import RequestItemRepository
@@ -13,6 +14,9 @@ class RequestsService:
         self.request_item_repository = RequestItemRepository(model=RequestItem)
         self.item_repository = ItemRepository()
         self.db = db
+
+    def get_by_id(self, id):
+        return self.repository.get_by_id(id)
 
     def list_requests_paginated(self, page: int = 1, per_page: int = 10):
         pagination = self.repository.get_paginated(page, per_page)
@@ -42,14 +46,24 @@ class RequestsService:
                 item_db = items_db_map.get(item_dto.item_id)
 
                 if not item_db:
-                    raise ValueError(f"Item {item_dto.item_id} não encontrado")
-
+                    raise ApiError(
+                        code="RES-002",
+                        message=f"Item {item_dto.item_id} não encontrado",
+                        status_code=404
+                    )
+                
                 if item_dto.quantity <= 0:
-                    raise ValueError("Quantidade inválida")
-
+                    raise ApiError(
+                        code="RES-002",
+                        message=f"Quantidade inválida",
+                        status_code=404
+                    )
+                
                 if item_db.stock_available < item_dto.quantity:
-                    raise ValueError(
-                        f"Estoque insuficiente para item {item_db.name}"
+                    raise ApiError(
+                        code="RES-003",
+                        message=f"Estoque insuficiente para item {item_db.name}",
+                        status_code=404
                     )
 
             # Faz a reserva
