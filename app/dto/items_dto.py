@@ -6,17 +6,7 @@ class ItemsListDTO(BaseModel):
     page: int = Field(..., ge=1)
     per_page: int = Field(..., ge=1, le=100)
 
-class ItemsListResponseDTO(BaseModel):
-    id: int
-    name: str = Field(..., min_length=1, max_length=150)
-    description: Optional[str] = None
-    stock_total: int
-    stock_reserved: int
-
-    class Config:
-        from_attributes = True
-
-class ItemDetailDTO(BaseModel):
+class ItemsListResponsePrivateDTO(BaseModel):
     id: int
     name: str
     description: Optional[str]
@@ -24,6 +14,8 @@ class ItemDetailDTO(BaseModel):
     unit_id: int
     location_id: int
     stock_total: int
+    stock_reserved: int
+    stock_available: int
     minimum_stock: int
 
     class Config:
@@ -80,9 +72,29 @@ class ItemsDeleteDTO(BaseModel):
     class Config:
         from_attributes = True
 
-class SummaryRequestItemDTO(BaseModel):
+class ResumeItemPublicDTO(BaseModel):
     id: int
     name: str
+    description: Optional[str]
+    category_id: int
+    unit_id: int
+    location_id: int
+
+    class Config:
+        from_attributes = True
+
+
+class ResumeItemPrivateDTO(BaseModel):
+    id: int
+    name: str
+    description: Optional[str]
+    category_id: int
+    unit_id: int
+    location_id: int
+    stock_total: int
+    stock_reserved: int
+    stock_available: int
+    minimum_stock: int
 
     class Config:
         from_attributes = True

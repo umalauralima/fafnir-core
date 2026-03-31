@@ -4,7 +4,7 @@ import zoneinfo
 from pydantic import BaseModel, Field, field_serializer
 
 from enum import Enum
-from app.dto.items_dto import SummaryRequestItemDTO
+from app.dto.items_dto import ResumeItemPrivateDTO, ResumeItemPublicDTO
 
 from app.dto.user_dto import UserSummaryDTO
 
@@ -31,7 +31,7 @@ class RequestListResponseDTO(BaseModel):
         if not value:
             return value
 
-        # 🔥 Se vier sem timezone, assume UTC
+        # Se vier sem timezone, assume UTC
         if value.tzinfo is None:
             value = value.replace(tzinfo=timezone.utc)
 
@@ -42,7 +42,24 @@ class RequestListResponseDTO(BaseModel):
 
         return local_dt.strftime("%d/%m/%Y %H:%M:%S")
 
-class RequestDetailDTO(BaseModel):
+class SummaryRequestItemPublicDTO(BaseModel):
+    id: int
+    quantity_requested: int
+    item: ResumeItemPublicDTO
+
+    class Config:
+        from_attributes = True
+
+
+class SummaryRequestItemPrivateDTO(BaseModel):
+    id: int
+    quantity_requested: int
+    item: ResumeItemPrivateDTO
+
+    class Config:
+        from_attributes = True
+
+class RequestDetailPublicDTO(BaseModel):
     id: int
 
     requester: UserSummaryDTO
@@ -55,7 +72,25 @@ class RequestDetailDTO(BaseModel):
     rejected_at: datetime | None
     canceled_at: datetime | None
 
-    items: list[SummaryRequestItemDTO]
+    items: list[SummaryRequestItemPublicDTO]
+
+    class Config:
+        from_attributes = True
+
+class RequestDetailPrivateDTO(BaseModel):
+    id: int
+
+    requester: UserSummaryDTO
+    approver: UserSummaryDTO | None
+
+    status: RequestStatus
+
+    created_at: datetime
+    approved_at: datetime | None
+    rejected_at: datetime | None
+    canceled_at: datetime | None
+
+    items: list[SummaryRequestItemPrivateDTO]
 
     class Config:
         from_attributes = True
